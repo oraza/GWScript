@@ -125,3 +125,20 @@ round(sd(ea.border$agecat4),2)
 round(sd(ea.border$agecat5),2)
 round(sd(ea.border$agecat6),2)
 
+#### GWPCA #####
+# assigning coordinates
+Coords=as.matrix(cbind(ea.border$xlong,
+                       ea.border$ylat))
+
+# merging coordinates with data set and converting it into shapefile
+ea.scaled.spdf=SpatialPointsDataFrame(Coords,as.data.frame(ea.df.sc))
+proj4string(ea.scaled.spdf) <- CRS("+init=epsg:4326")
+
+##################### Base map ##########################
+m <- leaflet(ea.border) %>%
+  addTiles() %>%
+  setView(37.701546, -6.765599, 4) %>%
+  addProviderTiles("MapBox", options = providerTileOptions(
+    id = "mapbox.light",
+    accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN')))
+

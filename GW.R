@@ -28,11 +28,11 @@ bart<-function(dat){ #dat is your raw data
       df,")=",chi2,", p=",
       round(p,3),sep="" )   
 }
-bart(ea.border@data[,16:41])
+# applying Bartlett's test for all potential confounders
+bart(ea.border@data[,16:41]) 
 
-# scale
+# scaling all explanatory variables including main
 ea.df.sc = scale(as.matrix(ea.border@data[,15:41])) 
-
 
 # global PCA using psych package
 ea.pca2 <- principal(as.matrix(ea.border@data[,16:41]), 

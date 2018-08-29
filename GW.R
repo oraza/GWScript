@@ -142,3 +142,76 @@ m <- leaflet(ea.border) %>%
     id = "mapbox.light",
     accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN')))
 
+#### Descriptive Results
+# prevalence of diarrhea
+
+ea.border@data$DiaProp <- as.numeric(ea.border@data$Diarrhea*100)
+pal <- colorNumeric(palette = "Reds",
+                    domain = ea.border@data$DiaProp)
+
+m %>% addPolygons(
+  stroke = F, smoothFactor = 0.2,
+  fillOpacity = 0.7,
+  color = ~pal(ea.border@data$DiaProp))  %>%
+  addLegend("bottomright", 
+            title = "Prevalence of Diarrhea <br> in East Africa (%)",
+            pal = pal, 
+            values = ea.border@data$DiaProp)
+
+# prevalence of ARI
+ea.border@data$ARIProp <- as.numeric(ea.border@data$ARI*100)
+pal <- colorNumeric(palette = "Reds",
+                    domain = ea.border@data$ARIProp)
+
+m %>% addPolygons(
+  stroke = F, smoothFactor = 0.2,
+  fillOpacity = 0.7,
+  color = ~pal(ea.border@data$ARIProp))  %>%
+  addLegend("bottomright", 
+            title = "Prevalence of ARI <br> in East Africa (%)",
+            pal = pal, 
+            values = ea.border@data$ARIProp)
+
+# prevalence of Fever
+ea.border@data$FeverProp <- as.numeric(ea.border@data$fever*100)
+pal <- colorNumeric(palette = "Reds",
+                    domain = ea.border@data$FeverProp)
+
+m %>% addPolygons(
+  stroke = F, smoothFactor = 0.2,
+  fillOpacity = 0.7,
+  color = ~pal(ea.border@data$FeverProp))  %>%
+  addLegend("bottomright", 
+            title = "Prevalence of fever <br> in East Africa (%)",
+            pal = pal, 
+            values = ea.border@data$FeverProp)
+
+# prevalence of ChildMorb
+ea.border@data$ChilMorbProp <- as.numeric(ea.border@data$ChildMorbid *100)
+pal <- colorNumeric(palette = "Reds",
+                    domain = ea.border@data$ChilMorbProp)
+
+m %>% addPolygons(
+  stroke = F, smoothFactor = 0.2,
+  fillOpacity = 0.7,
+  color = ~pal(ea.border@data$ChilMorbProp))  %>%
+  addLegend("topright", 
+            title = "Prevalence of childhood <br> morbidity in East Africa (%)",
+            pal = pal, 
+            values = ea.border@data$ChilMorbProp)
+
+# prevalence of Poor
+ea.border@data$PoorProp <- as.numeric(ea.border@data$Poor *100)
+pal <- colorNumeric(palette = "Blues",
+                    domain = ea.border@data$PoorProp)
+
+m %>% addPolygons(
+  stroke = F, smoothFactor = 0.2,
+  fillOpacity = 0.7,
+  color = ~pal(ea.border@data$PoorProp))  %>%
+  addLegend("topright", 
+            title = "Prevalence of poor <br> in East Africa (%)",
+            pal = pal, 
+            values = ea.border@data$PoorProp)
+
+

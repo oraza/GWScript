@@ -214,4 +214,12 @@ m %>% addPolygons(
             pal = pal, 
             values = ea.border@data$PoorProp)
 
+## calculting GW bandwidth to find an optimal adaptive bandwidth
+## using a bi-square kernel 
+bw.gwpca.k8=bw.gwpca(ea.scaled.spdf, 
+                     vars=colnames(ea.scaled.spdf@data[,1:27]), 
+                     k = 8,
+                     robust = FALSE,
+                     adaptive = TRUE,
+                     kernel = "bisquare")
 

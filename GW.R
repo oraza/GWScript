@@ -589,3 +589,19 @@ with(ea.scaled.spdf@data[,1:27],{
 abline(h=-0.1, v=2.15900, col = "red", lwd = 2)
 
 
+# to check Bandwidth function 
+sample.n <- 885
+ea.mat<-as.matrix(ea.scaled.spdf@data[,1:27])
+bwd.range.adapt <- c(seq(5,sample.n,by=10))
+cv.score <- matrix(nrow=length(bwd.range.adapt),ncol=1)
+for(i in 1:length(bwd.range.adapt)) cv.score[i] <-
+  gwpca.cv(bwd.range.adapt[i],ea.mat, loc = Coords,
+           k=8, robust = F, adaptive = T, kernel = "bisquare")
+
+plot(bwd.range.adapt, cv.score, ylab="", xlab="", cex=0.01, pch=0.01,
+     ylim=c(0, 8500), type = "l")
+title(ylab = list("CV score", cex=1.2, col="black"))
+title(xlab = list("No. of nearest neighbours", cex=1.2, col="black"))
+title(main = list("Adaptive bandwidth function for GWPCA", cex=1.4, col="black"))
+abline(v = 275, col="red", lty=2)
+abline(h =  3556, col="black", lty = 2)

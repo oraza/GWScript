@@ -223,3 +223,146 @@ bw.gwpca.k8=bw.gwpca(ea.scaled.spdf,
                      adaptive = TRUE,
                      kernel = "bisquare")
 
+prop.var=function(gwpca.obj, n.components){
+  return((rowSums(gwpca.obj$var[,1:n.components])/
+            rowSums(gwpca.obj$var))*100)
+}
+
+# PTV within GWPC1
+ea.ptv1<-(gwpca.k8$var[,1:1])/rowSums(gwpca.k8$var)*100
+ea.border$ea.ptv1.k8=ea.ptv1
+summary(ea.border$ea.ptv1.k8)
+sd(ea.border$ea.ptv1.k8)
+
+# mapping PTV within GWPC1
+mypal.6 <- c('#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026')
+bins <- c(quantile(ea.border$ea.ptv1.k8, probs = seq(0,1, 0.2),
+                   type = 8))
+pal <- colorBin(mypal.6, domain = ea.border$ea.ptv1.k8, bins = bins)
+
+m %>% addPolygons(
+  fillColor = ~pal(ea.border$ea.ptv1.k8),
+  weight = 1,
+  opacity = 0.3,
+  color = 'grey75',
+  fillOpacity = 0.5)  %>%
+  addLegend("bottomright", 
+            title = "Percentage of total variance <br>within first component",
+            pal = pal, 
+            values = ea.border$ea.ptv1.k8)
+
+# PTV within first GWPC2
+ea.ptv2=prop.var(gwpca.k8, 2)
+ea.border$ea.ptv2.k8=ea.ptv2
+summary(ea.border$ea.ptv2.k8)
+sd(ea.border$ea.ptv2.k8)
+
+# mapping PTV within GWPC2
+mypal.6 <- c('#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026')
+bins <- c(quantile(ea.border$ea.ptv2.k8, probs = seq(0,1, 0.2),
+                   type = 8))
+pal <- colorBin(mypal.6, domain = ea.border$ea.ptv2.k8, bins = bins)
+
+m %>% addPolygons(
+  fillColor = ~pal(ea.border$ea.ptv2.k8),
+  weight = 1,
+  opacity = 0.3,
+  color = 'grey75',
+  fillOpacity = 0.5)  %>%
+  addLegend("bottomright", 
+            title = "Percentage of total variance <br>within first two components",
+            pal = pal, 
+            values = ea.border$ea.ptv2.k8)
+
+# PTV within first 3 comp
+ea.ptv3=prop.var(gwpca.k8, 3)
+ea.border$ea.ptv3.k8=ea.ptv3
+summary(ea.border$ea.ptv3.k8)
+sd(ea.border$ea.ptv3.k8)
+
+# mapping PTV within GWPC3
+mypal.6 <- c('#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026')
+bins <- c(quantile(ea.border$ea.ptv3.k8, probs = seq(0,1, 0.2),
+                   type = 8))
+pal <- colorBin(mypal.6, domain = ea.border$ea.ptv3.k8, bins = bins)
+
+m %>% addPolygons(
+  fillColor = ~pal(ea.border$ea.ptv3.k8),
+  weight = 1,
+  opacity = 0.3,
+  color = 'grey75',
+  fillOpacity = 0.5)  %>%
+  addLegend("bottomright", 
+            title = "Percentage of total variance <br>within first three components",
+            pal = pal, 
+            values = ea.border$ea.ptv3.k8)
+
+# PTV within first 4 comp
+ea.ptv4=prop.var(gwpca.k8, 4)
+ea.border$ea.ptv4.k8=ea.ptv4
+summary(ea.border$ea.ptv4.k8)
+sd(ea.border$ea.ptv4.k8)
+
+# mapping PTV within GWPC4
+mypal.6 <- c('#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026')
+bins <- c(quantile(ea.border$ea.ptv4.k8, probs = seq(0,1, 0.2),
+                   type = 8))
+pal <- colorBin(mypal.6, domain = ea.border$ea.ptv4.k8, bins = bins)
+
+m %>% addPolygons(
+  fillColor = ~pal(ea.border$ea.ptv4.k8),
+  weight = 1,
+  opacity = 0.3,
+  color = 'grey75',
+  fillOpacity = 0.5)  %>%
+  addLegend("bottomright", 
+            title = "Percentage of total variance <br>within first four components",
+            pal = pal, 
+            values = ea.border$ea.ptv4.k8)
+
+# PTV within first 5 comp
+ea.ptv5=prop.var(gwpca.k8, 5)
+ea.border$ea.ptv5.k8=ea.ptv5
+summary(ea.border$ea.ptv5.k8)
+sd(ea.border$ea.ptv5.k8)
+
+# mapping PTV within GWPC5
+mypal.6 <- c('#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026')
+bins <- c(quantile(ea.border$ea.ptv5.k8, probs = seq(0,1, 0.2),
+                   type = 8))
+pal <- colorBin(mypal.6, domain = ea.border$ea.ptv5.k8, bins = bins)
+
+m %>% addPolygons(
+  fillColor = ~pal(ea.border$ea.ptv5.k8),
+  weight = 1,
+  opacity = 0.3,
+  color = 'grey75',
+  fillOpacity = 0.5)  %>%
+  addLegend("bottomright", 
+            title = "Percentage of total variance <br>within first five components",
+            pal = pal, 
+            values = ea.border$ea.ptv5.k8)
+
+# PTV within first 6 comp
+ea.ptv6=prop.var(gwpca.k8, 6)
+ea.border$ea.ptv6.k8=ea.ptv6
+summary(ea.border$ea.ptv6.k8)
+sd(ea.border$ea.ptv6.k8)
+
+# mapping PTV within GWPC6
+mypal.6 <- c('#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026')
+bins <- c(quantile(ea.border$ea.ptv6.k8, probs = seq(0,1, 0.2),
+                   type = 8))
+pal <- colorBin(mypal.6, domain = ea.border$ea.ptv6.k8, bins = bins)
+
+m %>% addPolygons(
+  fillColor = ~pal(ea.border$ea.ptv6.k8),
+  weight = 1,
+  opacity = 0.3,
+  color = 'grey75',
+  fillOpacity = 0.5)  %>%
+  addLegend("bottomright", 
+            title = "Percentage of total variance <br>within first six components",
+            pal = pal, 
+            values = ea.border$ea.ptv6.k8)
+

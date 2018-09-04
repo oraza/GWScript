@@ -1,4 +1,19 @@
 ### NOT PART OF THESIS ANALYSIS ###
+
+library(GWmodel)
+library(RColorBrewer)
+library(rgdal)
+library(leaflet)
+library(psych)
+library(classInt)
+
+## Calling dataset
+setwd("E\\GW_Thesis\\ThesisData")
+dsn <-getwd()
+ea.border<-readOGR(dsn = dsn, layer = "ea_Env_DHS")
+# converting aridity index to original values
+ea.border@data$Aridity <- ea.border@data$Aridity * 0.0001
+
 ## Local multidimensional outliers ############
 colnames(ea.scaled.spdf@data)[22] <- "age_lessth_6"
 colnames(ea.scaled.spdf@data)[23] <- "age6_11"

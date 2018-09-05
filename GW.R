@@ -605,3 +605,17 @@ title(xlab = list("No. of nearest neighbours", cex=1.2, col="black"))
 title(main = list("Adaptive bandwidth function for GWPCA", cex=1.4, col="black"))
 abline(v = 275, col="red", lty=2)
 abline(h =  3556, col="black", lty = 2)
+
+#### GWPCR #####
+# bivariable GWR between Childhood morb and poor
+# Calculating BW 
+ea.gwr.bi <- bw.gwr(ChildMorbid ~ Poor,
+                    data = ea.border, approach = 'AICc',
+                    kernel = 'bisquare', adaptive = TRUE)
+
+# GWR using Childhood morbidity and Poor
+ea.gwr.res.bi <- gwr.basic(ChildMorbid ~ Poor, 
+                           data = ea.border, bw = 350, 
+                           kernel = 'bisquare', adaptive = TRUE, 
+                           F123.test = TRUE)
+

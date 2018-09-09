@@ -732,3 +732,22 @@ ea.gwr.res <- gwr.basic(ChildMorbid ~ Poor + st.global.PC1 + st.global.PC2 +
                         data = ea.border, bw = 350, 
                         kernel = 'bisquare', adaptive = TRUE, 
                         F123.test = TRUE)
+
+## Mapping local R2 in full range
+pal <-  colorNumeric(
+  palette = "Blues",
+  domain = ea.gwr.res$SDF$Local_R2
+)
+
+m %>%
+  addPolygons(
+    stroke = FALSE, smoothFactor = 0.2, fillOpacity = 0.5,
+    color = ~pal(ea.gwr.res$SDF$Local_R2)
+  ) %>%
+  addLegend("bottomright", pal = pal, values = ~ea.gwr.res$SDF$Local_R2,
+            title = "Local R2", 
+            opacity = 0.5)
+
+
+
+

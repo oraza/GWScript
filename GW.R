@@ -619,3 +619,116 @@ ea.gwr.res.bi <- gwr.basic(ChildMorbid ~ Poor,
                            kernel = 'bisquare', adaptive = TRUE, 
                            F123.test = TRUE)
 
+# mapping unadjusted coefficients for Poor
+ea.border@data$bi.Poor <- as.numeric(ea.gwr.res.bi$SDF$Poor)
+bins <- c(quantile(gwss.biPoor$SDF$Cov_ChildMorbid.Poor, probs = seq(0, 1, 0.20), type =  8))
+pal <- colorBin(mypal.RedBlack, domain = gwss.biPoor$SDF$Cov_ChildMorbid.Poor, bins = bins)
+
+m %>% addPolygons(
+  fillColor = ~pal(gwss.biPoor$SDF$Cov_ChildMorbid.Poor),
+  weight = 1,
+  opacity = 0.3,
+  color = 'grey75',
+  fillOpacity = 0.6)  %>%
+  addLegend("bottomright", 
+            title = "Unadjusted coefficients<br>for Poor",
+            pal = pal, 
+            #labels= c("Low", "","","","High"),
+            values = gwss.biPoor$SDF$Cov_ChildMorbid.Poor)
+
+# mapping its associated p values
+ea.adjust.gwt.biPoor <- gwr.t.adjust(ea.gwr.res.bi) # produces a list
+names(ea.adjust.gwt.biPoor$SDF) # check the names of items within it
+ea.adjust.gwt.biPoorTtable <- ea.adjust.gwt.biPoor$SDF@data 
+names(ea.adjust.gwt.biPoorTtable)
+View(ea.adjust.gwt.biPoorTtable)
+pal <-  colorNumeric(
+  palette = "Blues",
+  domain = ea.adjust.gwt.biPoorTtable$Poor_p
+)
+
+m %>%
+  addPolygons(
+    stroke = FALSE, smoothFactor = 0.2, fillOpacity = 0.5,
+    color = ~pal(ea.adjust.gwt.biPoorTtable$Poor_p)
+  ) %>%
+  addLegend("bottomright", pal = pal, values = ~ea.adjust.gwt.biPoorTtable$Poor_p,
+            title = "p values", 
+            opacity = 0.5)
+
+# multivariable GWR 
+DeVar="ChildMorbid"
+InDeVars=c("Poor", "st.global.PC1", "st.global.PC2", "st.global.PC3","st.global.PC4",
+           "st.global.PC5", "st.global.PC6")
+
+# model selection
+model.sel=model.selection.gwr(DeVar, InDeVars, data=ea.border,
+                              kernel = "bisquare", adaptive=T, bw=350)
+sorted.models=model.sort.gwr(model.sel, numVars=length(InDeVars),
+                             ruler.vector=model.sel[[2]][,2])
+model.list=sorted.models[[1]]
+
+# visualizing model (minor modification in original function)
+model.view.gwr.OR <- function (DeVar, InDeVars, model.list) 
+{
+  n <- length(InDeVars)
+  if (n > 10) {
+    cex <- 10/n
+  }
+  else {
+    cex <- 1
+  }
+  numModels <- length(model.list)
+  alpha <- 2 * pi/numModels
+  cols <- rainbow(n)
+  pchs <- rep(c(16, 16, 16, 16, 16, 16, 16), length.out = n)
+  plot(x = 0, y = 0, xlim = c(-3 * n/4, n + 6), 
+       ylim = c(-n - 1, n + 1), cex = 2, axes = F, 
+       pch = "O", xlab = "", ylab = "", 
+       main = "View of GWPCR model selection")
+  for (i in 1:numModels) {
+    vars <- model.list[[i]][[2]]
+    nvar <- length(vars)
+    p1 <- c(0, 0)
+    for (j in 1:nvar) {
+      radius <- sqrt(n) * sqrt(j)
+      var.idx <- which(InDeVars == vars[j])
+      coord <- c(radius * cos((i - 1) * alpha), radius * 
+                   sin((i - 1) * alpha))
+      lines(x = c(p1[1], coord[1]), y = c(p1[2], coord[2]), 
+            col = "black", lwd = cex, lty = 3)
+      points(x = coord[1], y = coord[2], col = cols[var.idx], 
+             pch = pchs[var.idx], cex = (cex * i/numModels + 
+                                           0.3))
+      p1 <- coord
+    }
+    text(x = (radius + 0.5) * cos((i - 1) * alpha), 
+         y = (radius + 0.5) * sin((i - 1) * alpha), 
+         as.character(i), cex = cex * 0.6)
+  }
+  legend(x = n + 1, y = n/1, col = c("black", cols), 
+         pch = c(1, pchs), c(DeVar, InDeVars), box.col = "white")
+}
+
+model.view.gwr.OR(DeVar,InDeVars, model.list=model.list)
+plot(sorted.models[[2]][,3], col=c("grey40", "darkred"), 
+     pch=16, lty=1, lwd=2, 
+     main="AICc based model selection for GWPCR",
+     ylab="AICc", xlab="Model number", type="b")
+abline(h= seq(-980, -2000, -5),
+       lty=9, lwd = 0.3, col = "grey30")
+
+# Calculating BW for GWPCR
+ea.gwr <- bw.gwr(ChildMorbid ~ Poor + st.global.PC1 + st.global.PC2 + 
+                   st.global.PC3 + st.global.PC4 + st.global.PC5 + 
+                   st.global.PC6,
+                 data = ea.border, approach = 'AICc',
+                 kernel = 'bisquare', adaptive = TRUE)
+
+# GWPCR using first 6 global PCs 
+ea.gwr.res <- gwr.basic(ChildMorbid ~ Poor + st.global.PC1 + st.global.PC2 + 
+                          st.global.PC3 + st.global.PC4 + st.global.PC5 + 
+                          st.global.PC6, 
+                        data = ea.border, bw = 350, 
+                        kernel = 'bisquare', adaptive = TRUE, 
+                        F123.test = TRUE)

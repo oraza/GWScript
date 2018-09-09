@@ -748,6 +748,45 @@ m %>%
             title = "Local R2", 
             opacity = 0.5)
 
+# plotting GWPCR Coefficient for Poor
+# color pallate
+mypal.6 = c("#4d4d4d", "#999999", "#e0e0e0", "#fddbc7", "#ef8a62","#b2182b")
+bins <- c(quantile(ea.gwr.res$SDF$Poor, probs = seq(0, 1, 0.20), type =  8))
+pal <- colorBin(mypal.6, domain = ea.gwr.res$SDF$Poor, bins = bins)
+
+m %>% addPolygons(
+  fillColor = ~pal(ea.gwr.res$SDF$Poor),
+  weight = 1,
+  opacity = 0.3,
+  color = 'grey75',
+  fillOpacity = 0.6)  %>%
+  addLegend("bottomright", 
+            title = "Coefficients for Poor",
+            pal = pal, 
+            #labels= c("Low", "","","","High"),
+            values = ea.gwr.res$SDF$Poor)
+
+# adjust p-values for multiple hypothesis tests
+ea.adjust.gwt <- gwr.t.adjust(ea.gwr.res) # produces a list
+names(ea.adjust.gwt$SDF) # check the names of items within it
+ea.adjust.gwtTtable <- ea.adjust.gwt$SDF@data 
+names(ea.adjust.gwtTtable)
+View(ea.adjust.gwtTtable)
+
+pal <-  colorNumeric(
+  palette = "Blues",
+  domain = ea.adjust.gwtTtable$Poor_p
+)
+
+m %>%
+  addPolygons(
+    stroke = FALSE, smoothFactor = 0.2, fillOpacity = 0.5,
+    color = ~pal(ea.adjust.gwtTtable$Poor_p)
+  ) %>%
+  addLegend("bottomright", pal = pal, values = ~ea.adjust.gwtTtable$Poor_p,
+            title = "p values", 
+            opacity = 0.5)
+
 
 
 

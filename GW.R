@@ -786,7 +786,29 @@ m %>%
   addLegend("bottomright", pal = pal, values = ~ea.adjust.gwtTtable$Poor_p,
             title = "p values", 
             opacity = 0.5)
+# running multicollinearity test
+ea.gwr.collin<- gwr.collin.diagno(ChildMorbid ~ Poor + st.global.PC1 + 
+                                    st.global.PC2 + st.global.PC3 + 
+                                    st.global.PC4 + st.global.PC5 + 
+                                    st.global.PC6,
+                                  data = ea.border, bw = 350,
+                                  kernel="bisquare", adaptive=TRUE)
 
+# Plotting Local Condition Numbers
+ea.border@data$LocCN <- as.numeric(ea.gwr.collin$local_CN)
+mypal.6 <- c('#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026')
+bins <- c(quantile(ea.border@data$LocCN, probs = seq(0,1, 0.2),
+                   type = 8))
+pal <- colorBin(mypal.6, domain = ea.border@data$LocCN, bins = bins)
 
-
+m %>% addPolygons(
+  fillColor = ~pal(ea.border@data$LocCN),
+  weight = 1,
+  opacity = 0.3,
+  color = 'grey75',
+  fillOpacity = 0.5)  %>%
+  addLegend("bottomright", 
+            title = "Local CNs",
+            pal = pal, 
+            values = ea.border@data$LocCN)
 
